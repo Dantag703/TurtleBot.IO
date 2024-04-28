@@ -1,2 +1,4 @@
 # TurtleBot.io
  an Iot WebPage to controll TurtleBot3
+
+This work focuses on creating an IoT platform based on a modified TurtleBot3 robot with a 5-degree-of-freedom arm, webcam, and Dynamixel motors for precise and adaptable control. The control approach allows for managing various operation modes, speed, and position of each motor. The main challenge is efficiently managing the volume of sensor and actuator data, sending it to a web server for decentralized processing. This is achieved through IoT technologies, enabling remote control of the robot and real-time transmission of relevant data. The implementation of libraries and Python programming on the web server facilitates efficient data processing, resulting in an intuitive web platform for real-time robot control. This platform improves logical processing efficiency and provides an attractive educational platform for robotics enthusiasts.
