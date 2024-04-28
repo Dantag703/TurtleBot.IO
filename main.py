@@ -1,4 +1,4 @@
-import unittest
+
 from flask import request, make_response, redirect, render_template, session, send_from_directory, jsonify, Response, stream_with_context
 from flask_login import login_required, current_user
 from app import create_app
@@ -121,12 +121,6 @@ def publish_message():
     publish_result = mqtt_client.publish(
         request_data['topic'], request_data['msg'])
     return jsonify({'code': publish_result[0]})
-
-@app.cli.command()
-def test():
-    tests = unittest.TestLoader().discover('tests')
-    unittest.TextTestRunner().run(tests)
-
 
 @app.errorhandler(404)
 def not_found(error):
