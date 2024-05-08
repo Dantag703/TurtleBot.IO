@@ -1,0 +1,16 @@
+Flask
+Flask-Bootstrap
+Flask-Login
+Flask-MQTT
+WTForms
+matplotlib
+numpy
+opencv-python
+torch
+torchvision
+firebase-admin
+timm
+flask_wtf
+paho-MQTT
+flask-socketio
+websockets
