@@ -1,0 +1,51 @@
+<nav class="sidebar">
+
+  <ul class="sidebar-body">
+    <li class="title">
+      <span class="title-text">turtlebot.io</span>
+    </li>
+
+    <li class="user">
+      <a href="#" class="user-link">
+        <span class="link-text">{{ username }}</span>
+        <img src="{{ url_for('static', filename='images/usuario.png') }}" alt="Home-img">
+      </a>
+
+      <div class="user-menu">
+        <ul>
+          <li><a href="/"><img src="{{ url_for('static', filename='images/ajuste.png') }}" alt="settingsimg">Settings</a></li>
+          <li><a href="{{ url_for('auth.logout')}}"><img src="{{ url_for('static', filename='images/salida.png') }}" alt="logoutimg">Log-Out</a></li>
+        </ul>
+      </div> 
+    </li>
+
+    <div class="sidebar-line_container">
+      <div class="sidebar-line"></div>
+    </div>
+    
+    <li class="body-item">
+      <a href="{{ url_for('home')}}" class="body-link" id="home">
+        <img src="{{ url_for('static', filename='images/casa.png') }}" alt="Home-img">
+        <span class="link-text">Home</span>
+      </a>
+    </li>
+
+    <li class="body-item">
+      <a href="{{ url_for('simulation')}}" class="body-link" id="Sim">
+        <img src="{{ url_for('static', filename='images/cubo (1).png') }}" alt="Home-img">
+        <span class="link-text">Simulation & Manipulation</span>
+      </a>
+    </li>
+
+
+    <li class="body-item">
+      <a href="{{ url_for('machine_learning')}}" class="body-link" id="ML">
+        <img src="{{ url_for('static', filename='images/machine-learning.png') }}" alt="Home-img">
+        <span class="link-text">Machine Learning</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+<script type="module" src="{{ url_for('static', filename='scripts/sidebar.js')}}"></script>

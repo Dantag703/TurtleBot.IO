@@ -1,0 +1,266 @@
+{% extends 'bootstrap/base.html' %}
+{% import 'macros.html' as macros%}
+{% block head %}
+    {{ super() }}
+    <title>
+    {% block title %}TURTLEBOT.IO {% endblock %}
+    </title>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+{% endblock %}
+
+{% block body %}
+<body>
+  {% block navbar %}
+    {% include 'sidebar.html' %}
+  {% endblock %}
+
+  {% block main%}
+  <main>
+    <section class="movement">
+      <div class="movslider-wrapper">
+        <div class="movslider">
+          <div class="mov direct" id="slider-direct">
+
+            <span class="movement-title">controls (direct)</span>
+
+            <div class="invdata-container">
+              <div class="dataArms">
+                <div class="invdata">
+                <span class="limb">x</span>
+                <span class="number" id="armI-n-X">{{ posX }}</span>
+                </div>
+                <div class="invdata">
+                <span class="limb">y</span>
+                <span class="number" id="armI-n-Y">{{ posY }}</span>
+                </div>
+                <div class="invdata">
+                <span class="limb">z</span>
+                <span class="number" id="armI-n-Z">{{ posZ }}</span>
+                </div>
+              </div>
+              <div class="dataArms">
+                <div class="invdata">
+                <span class="limb">r°</span>
+                <span class="number" id="armI-n-R">{{ posR }}</span>
+                </div>
+                <div class="invdata">
+                <span class="limb">p°</span>
+                <span class="number" id="armI-n-P">{{ posP }}</span>
+                </div>
+                <div class="invdata">
+                <span class="limb">y°</span>
+                <span class="number" id="armI-n-Yaw">{{ posYaw }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="arms">
+              <span class="arms-title">arms movement</span>
+              <ul class="arms-list">
+               {{ macros.slider(6) }}
+	       {{ macros.slider2(5) }}
+	       {{ macros.slider2(4) }}
+	       {{ macros.slider2(3) }}
+	       {{ macros.slider2(2) }}
+	       {{ macros.slider2(1) }}
+              </ul>
+            </div>
+
+            <div class="wheels">
+              <span class="wheels-title">wheels movement</span>
+              <ul class="wheels-list">
+                {% for id in range(1, 3) %}
+                  {{ macros.wheel(id) }}
+                {% endfor %}
+              </ul>
+              <div class="wheels-labels">
+                <div class="invdata">
+                  <span class="limb">AngularV</span>
+                  <span class="number" id="angularV">{{ omega }}</span>
+                </div>
+                <div class="invdata">
+                  <span class="limb">LinealV</span>
+                  <span class="number" id="linealV">{{ lV }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="buttons-container">
+              <div class="send-button">
+                <button class="send" id="sendButton" >Send Values</button>
+              </div>
+               
+              <div class="get-button">
+                <button class="get" id="getButton" >Update Values</button>
+              </div>
+            </div>
+            
+
+          </div>
+
+          <div class="mov inverse" id="slider-inverse">
+
+            <span class="movement-title">controls (inverse)</span>
+
+            <div class="dirdata-container">
+              <div class="dataArms">
+                {{ macros.dirArmInfo(1) }}              
+                {{ macros.dirArmInfo(2) }}              
+                {{ macros.dirArmInfo(3) }}              
+              </div>
+              <div class="dataArms">
+                {{ macros.dirArmInfo(4) }}              
+                {{ macros.dirArmInfo(5) }}              
+                {{ macros.dirArmInfo(6) }} 
+              </div>
+              
+            </div>
+
+            <div class="xyzRPY">
+              <span class="posAng-title">position and angles</span>
+              <ul class="xyzRPY-list">
+                <li class="movement-arms_container" id="armX">
+                  <span class="limb">x</span>
+                  <div class="incdec-container">
+                    <button class="arrow dec" id="decreaseArmX">-</button>
+                    <span class="number" id="arm-n-X">50</span>
+                    <button class="arrow inc" id="increaseArmX">+</button>
+                  </div>
+                  <span class="slider"><input type="range" class="form-range" min="-36.5" max="36.5" id="sliderX" /></span>
+                </li>
+                <li class="movement-arms_container" id="armY">
+                  <span class="limb">y</span>
+                  <div class="incdec-container">
+                    <button class="arrow dec" id="decreaseArmY">-</button>
+                    <span class="number" id="arm-n-Y">50</span>
+                    <button class="arrow inc" id="increaseArmY">+</button>
+                  </div>
+                  <span class="slider"><input type="range" class="form-range" min="-36.5" max="36.5" id="sliderY" /></span>
+                </li>
+                <li class="movement-arms_container" id="armZ">
+                  <span class="limb">z</span>
+                  <div class="incdec-container">
+                    <button class="arrow dec" id="decreaseArmZ">-</button>
+                    <span class="number" id="arm-n-Z">50</span>
+                    <button class="arrow inc" id="increaseArmZ">+</button>
+                  </div>
+                  <span class="slider"><input type="range" class="form-range" min="-15" max="45" id="sliderZ" /></span>
+                </li>
+                <li class="movement-arms_container" id="armR">
+                  <span class="limb">roll</span>
+                  <div class="incdec-container">
+                    <button class="arrow dec" id="decreaseArmR">-</button>
+                    <span class="number" id="arm-n-R">50</span>
+                    <button class="arrow inc" id="increaseArmR">+</button>
+                  </div>
+                  <span class="slider"><input type="range" class="form-range" min="-179" max="180" id="sliderR" /></span>
+                </li>
+                <li class="movement-arms_container" id="armP">
+                  <span class="limb">pitch</span>
+                  <div class="incdec-container">
+                    <button class="arrow dec" id="decreaseArmP">-</button>
+                    <span class="number" id="arm-n-P">50</span>
+                    <button class="arrow inc" id="increaseArmP">+</button>
+                  </div>
+                  <span class="slider"><input type="range" class="form-range" min="-179" max="180" id="sliderP" /></span>
+                </li>
+                <li class="movement-arms_container" id="armYaw">
+                  <span class="limb">Yaw</span>
+                  <div class="incdec-container">
+                    <button class="arrow dec" id="decreaseArmYaw">-</button>
+                    <span class="number" id="arm-n-Yaw">50</span>
+                    <button class="arrow inc" id="increaseArmYaw">+</button>
+                  </div>
+                  <span class="slider"><input type="range" class="form-range" min="-179" max="180" id="sliderYaw" /></span>
+                </li>
+              </ul>
+            </div>
+            <div class="movement-direction">
+              <p class="movement-direction_title">Car movement</p>
+              <div class="optional-container">
+                <div class="invdata">
+                  <span class="limb">AngularV</span>
+                  <span class="number" id="angularVInv">0</span>
+                </div>
+                <div class="directional-buttons">
+                  <button class="direction-button up" id="forward">
+                    <span class="visually-hidden">up</span>
+                  </button>
+                  <button class="direction-button left" id="reverse">
+                  <span class="visually-hidden">left</span>
+                  </button>
+                  <button class="direction-button right" id="right">
+                  <span class="visually-hidden">right</span>
+                  </button>
+                  <button class="direction-button down" id="left">
+                  <span class="visually-hidden">down</span>
+                  </button>
+                </div>
+                <div class="invdata">
+                  <span class="limb">LinealV</span>
+                  <span class="number" id="linealVInv">0</span>
+                </div>
+              </div>
+              <div class="buttons-container">
+                <div class="send-button">
+                  <button class="send" id="sendButtonInv" >Send Values</button>
+                </div>
+                 
+                <div class="get-button">
+                  <button class="get" id="getButtonInv" >Update Values</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="slider-nav">      
+          <a href="#slider-direct"></a>  
+          <a href="#slider-inverse"></a>
+        </div>   
+      </div>
+    </section>
+
+    <section class="simulation">
+      <canvas class="sim"></canvas>
+    </section>
+
+
+    <section class="imagesContainer">
+	<div class="imgslider-wrapper">
+		<div class="imgslider">
+			<img id="slider-camera1" class="camera-image" src="{{ url_for('video_feed') }}" alt=""/>
+			<img id="slider-mlcamera1" class="ml-image" src="" alt=""/>
+		</div>
+				<div class="slider-nav">
+					<a href="#slider-camera"></a>
+					<a href="#slider-mlcamera1"></a>
+				</div>
+			</div>
+		</section>
+    
+  </main>
+  {% endblock %}
+  {% block scripts %}
+    {{ super() }}
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+
+	  <script type="importmap">
+	  	{
+	  		"imports": 
+	  		{
+	  			"three": "https://unpkg.com/three@0.156.1/build/three.module.js",
+	  			"three/addons/": "https://unpkg.com/three@0.156.1/examples/jsm/"
+	  		}
+	  	}
+	  </script>
+  
+    <script type="module" src="{{ url_for('static', filename='scripts/main.js')}}"></script>
+  {% endblock %}
+</body>
+{% endblock %}
