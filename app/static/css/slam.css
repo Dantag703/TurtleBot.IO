@@ -1,0 +1,452 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 62.5%;
+  }
+  
+  body {
+      display: flex;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+  
+  .sidebar {
+    width: 5rem;
+    height: 100vh;
+    background-color: #222831;
+    position: fixed;
+    transition: width 0.2s ease ;
+    z-index: 1;
+  }
+  
+  
+  .sidebar-body {
+    list-style: none;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  
+  
+  
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 5rem;
+    width: 100%;
+  }
+  
+  .title-text {
+    color: white;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.4rem;
+    text-transform: uppercase;
+    display: none;
+  }
+  
+  .sidebar:hover .title-text {
+    display: block;
+  }
+  
+  .user {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    width: 100%;
+    letter-spacing: 0.3ch;
+  }
+  
+  .user-link {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 5rem;
+    text-decoration: none;
+  }
+  
+  .user-link:hover {
+    background-color: #37404F;
+  }
+  
+  .user-link img{
+    width: 3rem;
+    margin: 0 1rem;
+  }
+  
+  .user-menu {
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    background-color: #393E46;
+    width: 80%;
+    height: 8rem;
+    left: 2.5rem;
+    border-radius: 0 1rem 1rem 1rem;
+    border: solid 0.2rem #828282;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.4s;
+  }
+  
+  .user-menu.active {
+    visibility: visible;
+    opacity: 0.95;
+  }
+  
+  .user-menu ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    list-style: none;
+    margin: 1rem 0;
+    gap: 1rem;
+  }
+  
+  .user-menu ul li {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    -webkit-user-select: none;
+  }
+  
+  
+  .user-menu ul li img {
+    aspect-ratio: 1;
+    max-width: 2rem;
+    margin: 0 1rem;
+  }
+  
+  .user-menu ul li a {
+    text-decoration: none;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.6rem;
+    transition: 0.4s;
+  }
+  
+  .user-menu ul li:hover  a{
+    color: #00ADB5;
+    text-decoration: underline;
+  }
+  
+  .sidebar-line_container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .sidebar-line {
+    width: 1rem;
+    height: 1rem;
+    background-color: #828282;
+    border-radius: 0.5rem;
+    transition: 0.2s;
+  }
+  
+  
+  .sidebar:hover .sidebar-line {
+    width: 80%;
+  }
+  
+  .body-item {
+    width: 100%;
+  }
+  
+  .body-link {
+    display: flex;
+    align-items: center;
+    height: 5rem;
+    text-decoration: none;
+    transition: 0.4s;
+  }
+  
+  
+  .body-link:hover {
+    background-color: #37404F;
+  }
+  
+  .link-text {
+    display: none;
+    margin-left: 1rem;
+  }
+  
+  .body-link img{
+    width: 2rem;
+    margin: 0 1.5rem;
+  }
+  
+  .sidebar:hover {
+    width: 20rem;
+  }
+  
+  .sidebar:hover .link-text {
+    display: block;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.6rem;
+  }
+  
+  .sidebar:hover .logo img {
+    transform: rotate(-270deg);
+  }
+  
+  main {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    background-color: #393E46;
+    grid-template-areas: 
+              "cnt lid"
+              "cnt map"
+  ;
+    margin-left: 5rem;
+    padding: 1rem 4rem;
+    gap: 2rem 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+
+  .controls-cam {
+    grid-area: cnt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 2rem 1rem;
+    background-color: #00ADB5;
+    border-radius: 2rem;
+    box-shadow: 0.25rem 1rem 0.5rem rgba(0, 0, 0, 0.4);
+  }
+
+  figure {
+    aspect-ratio: 16/9;
+    width: 90%;
+  }
+
+  img {
+    object-fit: cover;
+    border-radius: 0.8rem;
+  }
+
+  /* button layout */
+.directional-buttons {
+  /* Define the size of the grid */
+  /* Other things rely on this! Change at your own peril! */
+  width: 16rem;
+  height: 16rem;
+  /* display the buttons in a grid */
+  display: grid;
+  /* leave a little gap between columns/rows */
+  grid-gap: 0.5rem;
+  /* define a 3 x 3 grid with middle column/row larger */
+  grid-template-columns: 45fr 60fr 45fr;
+  grid-template-rows: 45fr 60fr 45fr;
+  /* name the cells in the grid */
+  grid-template-areas: "....  up  ....."
+                       "left  ..  right"
+                       ".... down .....";    
+}
+
+/* hides the button text */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; 
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* base button */
+.direction-button {
+  /* the button colours */
+  color: rgb(55, 50, 50);
+  /* since there's no text, we can use the color value for the background */
+  background: currentcolor;
+  /* clears default button styles */
+  border: none;
+  /* makes sure the triangles are moved relative to the button */
+  position: relative;
+}
+
+/* the overlapping outside triangle 
+ * actually, it's just a rotated square
+ */
+.direction-button:before {
+  /* make the triangle display */
+  display: block;
+  content: "";
+  /* make the triangle able to be moved around relative to the button */
+  position: absolute;
+  /* approximately makes the diagonal the right size */
+  width: 4.25rem;
+  height: 4.25rem;
+  /* rotate the square (to look like a triangle) */
+  transform: rotate(45deg);
+  /* use the current color value for the background to match the button */
+  background: currentcolor;
+}
+
+/* the inner direction triangle */
+.direction-button:after {
+  /* make the triangle display */
+  display: block;
+  content: "";
+  /* make the triangle able to be moved around relative to the button */
+  position: absolute;
+  /* same border-based triangle trick as before */
+  border: 2rem solid transparent;
+  /* using color value for border-color to make it easier to change */
+  color: rgba(255, 250, 250, 0.6);
+}
+
+/* when the button is hovered */
+.direction-button:hover {
+  /* make the button a different color */
+  color: rgb(85,55,55);
+}
+
+/* when the button is pressed */
+.direction-button:active:after {
+  /* make the inner triangle a different color! */
+  color: rgb(255, 152, 152);
+}
+
+/* individual button styles */
+.up {
+  /* puts the button in the named grid cell */
+  grid-area: up;
+  /* only curves the outer corners */
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+.up:before {
+  /* center the overlapping triangle horizontally */
+  left: calc(50% - 2.125rem);
+  /* position it so it overlaps just right */
+  bottom: -2.125rem;
+}
+.up:after {
+  /* do the border-based triangle trick */
+  border-bottom-color: currentcolor;
+  /* center inner triangle horizontally */
+  left: calc(50% - 2rem);
+  /* position it just right */
+  top: -1rem;
+}
+
+.left {
+  /* puts the button in the named grid cell */
+  grid-area: left;
+  /* only curves the outer corners */
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+.left:before {
+  /* position it so it overlaps just right */
+  right: -2.125rem;
+  /* center the overlapping triangle vertically */
+  top: calc(50% - 2.125rem);
+}
+.left:after {
+  /* do the border-based triangle trick */
+  border-right-color: currentcolor;
+  /* center inner triangle vertically */
+  top: calc(50% - 2rem);
+  /* position it just right */
+  left: -1rem;
+}
+
+.right {
+  /* puts the button in the named grid cell */
+  grid-area: right;
+  /* only curves the outer corners */
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.right:before {
+  /* position it so it overlaps just right */
+  left: -2.125rem;
+  /* center the overlapping triangle vertically */
+  top: calc(50% - 2.125rem);
+}
+.right:after {
+  /* do the border-based triangle trick */
+  border-left-color: currentcolor;
+  /* center inner triangle vertically */
+  top: calc(50% - 2rem);
+  /* position it just right */
+  right: -1rem;
+}
+
+.down {
+  /* puts the button in the named grid cell */
+  grid-area: down;
+  /* only curves the outer corners */
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+.down:before {
+  /* center the overlapping triangle horizontally */
+  left: calc(50% - 2.125rem);
+  /* position it so it overlaps just right */
+  top: -2.125rem;
+}
+.down:after {
+  /* do the border-based triangle trick */
+  border-top-color: currentcolor;
+  /* center inner triangle horizontally */
+  left: calc(50% - 2rem);
+  /* position it just right */
+  bottom: -1rem;
+}
+
+.lidar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-area: lid;
+  padding: 1rem 2rem;
+  background-color: #00ADB5;
+  border-radius: 2rem;
+  box-shadow: 0.25rem 1rem 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+.lidarMap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-area: map;
+  padding: 1rem 2rem;
+  background-color: #00ADB5;
+  border-radius: 2rem;
+  box-shadow: 0.25rem 1rem 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+
+@media (width >= 1920px) {
+  html {
+    font-size: 100%;
+  }
+
+  /* .movement-arms {
+    justify-content: center;
+    transform: scale(1.1);
+  }
+
+  .movement-arms_container {
+    justify-content: center;
+    margin: 1rem 0;
+  } */
+}
