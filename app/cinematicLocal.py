@@ -45,7 +45,7 @@ def dinamic():# arm ET
     return arm
 
 def fkine(request_data):
-    msg = request_data['msg']
+    msg = request_data['data']
     qdxl = msg.split()
     print(qdxl)
     qdxl = [np.deg2rad(float(x)) for x in qdxl]
@@ -157,12 +157,12 @@ def invCalc(arm,Tep,q0):
     return inv
     
 def ikine(request_data,q1,q2,q3,q4,q5,q6):
-    msg = request_data['msg']
+    msg = request_data['data']
     posInv = msg.split()
     print(posInv)
     posInv = [float(x) for x in posInv]
     arm = dinamic()
-    q0 = np.array([q1, q2, q3, q4, q5])
+    q0 = np.array([q1, q2,  q3, q4, q5])
 
     Etz = rtb.ET.tz(posInv[0]/100).A()
     Ety = rtb.ET.ty(posInv[1]/100).A()
@@ -193,5 +193,3 @@ def fwkine(w1,w2):
     lV = R * (w1 + w2)/2
     omega = R * (w1 - w2)/L
     return np.round(lV,2), np.round(omega,2)
-
-

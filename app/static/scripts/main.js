@@ -1,11 +1,8 @@
-
-
 import * as THREE from 'three';
+
 import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
-// import { LinearToSRGB } from 'three/src/math/ColorManagement';
-
 
 const sliders = [
     "#slider1", "#slider2", "#slider3", "#slider4", "#slider5", "#slider6",
@@ -56,8 +53,9 @@ var labelI6 = document.querySelector(getDirectLabels[5])
 var labelVL = document.querySelector(valueElements[15])
 var labelAL = document.querySelector(valueElements[14])
 
+
 function pause(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms * 1000));
+  return new Promise(resolve => setTimeout(resolve, ms * 1000));
 }
 
 function updateSliderValue(index) {
@@ -87,13 +85,15 @@ function updateSliderValue(index) {
 
 function increase(index) {
     document.querySelector(sliders[index]).value = parseInt(document.querySelector(sliders[index]).value) + 1;
-    updateSliderValue(index);
+  updateSliderValue(index);
 }
 
 function decrease(index) {
     document.querySelector(sliders[index]).value -= 1;
-    updateSliderValue(index);
+  updateSliderValue(index);
 }
+
+
 
 sliders.forEach((slider, index) => {
     const element = document.querySelector(slider);
@@ -129,26 +129,23 @@ sliders.forEach((slider, index) => {
 });
 
 increaseButtons.forEach((button, index) => {
-    const element = document.querySelector(button);
-    element.addEventListener("click", () => increase(index));
+  const element = document.querySelector(button);
+  element.addEventListener("click", () => increase(index));
 });
 
 decreaseButtons.forEach((button, index) => {
-    const element = document.querySelector(button);
-    element.addEventListener("click", () => decrease(index));
+  const element = document.querySelector(button);
+  element.addEventListener("click", () => decrease(index));
 });
 
+
 const sendButton = document.querySelector("#sendButton")
-const stabswitch = document.querySelector("#switchStab")
 const sendButtonInv = document.querySelector("#sendButtonInv")
 const getButton = document.querySelector("#getButton")
 const getButtonInv = document.querySelector("#getButtonInv")
 
-
-sendButton.addEventListener("click", sendPosFkine);
-sendButtonInv.addEventListener("click", sendPosIkine);
-//getButton.addEventListener("click", getPosReal);
-//getButtonInv.addEventListener("click", getPosIkine);
+sendButton.addEventListener("click", enviarPosFkine);
+sendButtonInv.addEventListener("click", enviarPosIkine);
 
 
 
@@ -214,8 +211,7 @@ function refreshLabelsI(stats) {
     setShoulderRotation(document.querySelector(sliders[5]).value);
 }
 
-
-function sendPosFkine() {
+function enviarPosFkine() {
     const dxl7 = document.querySelector(valueElements[5]).textContent;
     const dxl6 = document.querySelector(valueElements[4]).textContent;
     const dxl5 = document.querySelector(valueElements[3]).textContent;
@@ -224,18 +220,19 @@ function sendPosFkine() {
     const dxl2 = document.querySelector(valueElements[0]).textContent;
     const dxl1 = document.querySelector(valueElements[6]).textContent;
     const dxl0 = document.querySelector(valueElements[7]).textContent;
+
     const positionQ = dxl2 + " " + dxl3 + " " + dxl4 + " " + dxl5 + " " + dxl6 + " " + dxl7;
     const positionW = dxl0 + " " + dxl1
 
-
     console.log(positionQ);
 
-    enviarFMQTT('/turtlebot/set/arm', positionQ);
-    enviarFWMQTT('/turtlebot/set/wheels', positionW)
+    enviarDatosDir(positionQ);
+    enviarDatosW(positionW)
+    // refreshLabels();
 
 }
 
-function sendPosIkine() {
+function enviarPosIkine() {
     const posX = document.querySelector(valueElements[8]).textContent;
     const posY = document.querySelector(valueElements[9]).textContent;
     const posZ = document.querySelector(valueElements[10]).textContent;
@@ -243,18 +240,17 @@ function sendPosIkine() {
     const posP = document.querySelector(valueElements[12]).textContent;
     const posYaw = document.querySelector(valueElements[13]).textContent;
 
-    const positionInv = posX + " " + posY + " " + posZ + " " + posR + " " + posP + " " + posYaw;
+    const positionInv = posX+" "+posY+" "+posZ+" "+posR+" "+posP+" "+posYaw;
 
     console.log(positionInv);
 
-    enviarIMQTT('/turtlebot/set/arm', positionInv);
+    enviarDatosInv(positionInv);
 
 }
 
-function enviarFMQTT(topic, msg) {
+function enviarDatosDir(data) {
     var data = {
-        'topic': topic,
-        'msg': msg
+        'data': data,
     };
 
     // Envía el mensaje al servidor Flask en tiempo real usando una solicitud HTTP POST
@@ -269,17 +265,16 @@ function enviarFMQTT(topic, msg) {
         .then(data => {
             // Maneja la respuesta del servidor si es necesario
             console.log(data);
-            refreshLabelsF(data)
+            refreshLabelsF(data);
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
 
-function enviarFWMQTT(topic, msg) {
+function enviarDatosW(data) {
     var data = {
-        'topic': topic,
-        'msg': msg
+        'data': data,
     };
 
     // Envía el mensaje al servidor Flask en tiempo real usando una solicitud HTTP POST
@@ -294,17 +289,16 @@ function enviarFWMQTT(topic, msg) {
         .then(data => {
             // Maneja la respuesta del servidor si es necesario
             console.log(data);
-            refreshLabelsF(data)
+            refreshLabelsF(data);
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
 
-function enviarIMQTT(topic, msg) {
+function enviarDatosInv(data) {
     var data = {
-        'topic': topic,
-        'msg': msg
+        'data': data,
     };
 
     // Envía el mensaje al servidor Flask en tiempo real usando una solicitud HTTP POST
@@ -319,31 +313,7 @@ function enviarIMQTT(topic, msg) {
         .then(data => {
             // Maneja la respuesta del servidor si es necesario
             console.log(data);
-            refreshLabelsI(data)
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
-function enviarMQTT(topic, msg) {
-    var data = {
-        'topic': topic,
-        'msg': msg
-    };
-    // Envía el mensaje al servidor Flask en tiempo real usando una solicitud HTTP POST
-    fetch('/publish', {
-        method: 'POST',
-        body: JSON.stringify(data), // Envía el valor como JSON
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            // Maneja la respuesta del servidor si es necesario
-            console.log(data);
-            refreshLabelsF(data)
+            refreshLabelsI(data);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -391,7 +361,7 @@ animate();
 //#region extra tools
 //#endregion
 
-//------------------------------- funciones para SIM -------------------------------------------------
+//------------------------------- funciones para nico -------------------------------------------------
 
 /**
  * Update robots position and rotation values
@@ -419,7 +389,7 @@ function setWheelRotation(r, l) {
  * @param  {number} r Y axis rotation value of the Shoulder (0 - 100)
  */
 function setShoulderRotation(r) {
-    var value = map(r, -150, 150, -0.83 * Math.PI, 0.83 * Math.PI)
+    var value = map(r, -150, 150, -0.83*Math.PI, 0.83*Math.PI)
     console.log("Shoulder Y:", value);
     Shoulder.rotation.y = value;
 }
@@ -442,7 +412,7 @@ function setForeArmRotation(r) {
     var value = map(r, -149, 149, -2.4, 2.4)
     console.log("ForeArm X:", value);
     ForeArm.rotation.x = value;
-}
+} 
 
 /**
  * Update Wrist rotation value
@@ -459,7 +429,7 @@ function setWristRotation(r) {
  * @param  {number} r Y axis rotation value of the Claw_1 (0 - 100)
  */
 function setClaw_1Rotation(r) {
-    var value = map(r, -150, 150, -0.833 * Math.PI, 0.833 * Math.PI)
+    var value = map(r, -150, 150, -0.833*Math.PI, 0.833*Math.PI)
     console.log("Claw_1 Y:", value);
     Claw_1.rotation.y = value;
 }
@@ -467,7 +437,7 @@ function setClaw_1Rotation(r) {
 /**
  * Update Claw_2 rotation value
  * @param  {number} r X axis rotation value of the Claw_2 (0 - 100)
- */
+*/
 function setClaw_2Rotation(r) {
     var value = map(r, 62.5, 0, 0, 2.8)
     console.log("Claw_2 X:", value);
@@ -475,13 +445,15 @@ function setClaw_2Rotation(r) {
 }
 
 
+
 //------------------------------- THREE js -------------------------------------------------
 
 function init() {
 
-
     const canvaSim = document.querySelector(".sim")
-    camera = new THREE.PerspectiveCamera(45, canvaSim.width / canvaSim.height, 1, 4000);
+    // const simContainer = document.querySelector(".simulation")
+   
+    camera = new THREE.PerspectiveCamera(45, canvaSim.width/canvaSim.height, 1, 4000);
     camera.position.set(100, 400, 1000);
     camera.updateProjectionMatrix();
 
@@ -529,15 +501,15 @@ function init() {
 
 
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvaSim });
-    renderer.setPixelRatio(canvaSim.width / canvaSim.height);
-    // renderer.setSize(canvaSim.clientWidth, canvaSim.clientHeight);
+    // renderer.setSize(simContainer.clientWidth, simContainer.clientHeight);
+    renderer.setPixelRatio(canvaSim.width/canvaSim.height);
     renderer.shadowMap.enabled = true;
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 300, 0);
     controls.update();
 
-    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('resize', onWindowResize,false);
 
     // stats
     stats = new Stats();
@@ -630,15 +602,15 @@ function ParentParts() {
     Claw_1.position.set(0, 75, 24);
     Claw_2.position.set(0, 23, 15);
 
-    Shoulder.rotation.y = -Math.PI / 2;
+    Shoulder.rotation.y = -Math.PI/2;
 }
 
 function onWindowResize() {
 
-    camera.aspect = canvaSim.width / canvaSim.height;
+    camera.aspect = 16/ 9;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(canvaSim.width, canvaSim.height);
+    renderer.setSize(simContainer.clientWidth, simContainer.clientHeight);
 }
 
 function animate() {

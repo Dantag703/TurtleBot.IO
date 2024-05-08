@@ -5,9 +5,11 @@ from werkzeug.security import generate_password_hash
 from app.forms import LoginForm, SignUpForm
 
 from . import auth
-from app.firestore_service import get_user, user_put
 from app.models import UserModel, UserData
+global password, username
 
+username = "nicolas"
+password = "holahola"
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -18,16 +20,12 @@ def login():
 
     if login_form.validate_on_submit():
         flash('gracia gei 2')
-        username = login_form.username.data
-        password = login_form.password.data
-
-        user_doc = get_user(username)
-
-        if user_doc.to_dict() is not None:
-            password_from_db = user_doc.to_dict()['password']
-
-            if password == password_from_db:
-                user_data = UserData(username, password)
+        usernamel = login_form.username.data
+        passwordl = login_form.password.data
+        
+        if usernamel == username:
+            if passwordl == password:
+                user_data = UserData(usernamel, passwordl)
                 user = UserModel(user_data)
 
                 login_user(user)
@@ -53,18 +51,14 @@ def signup():
     }
 
     if signup_form.validate_on_submit():
-        username = signup_form.username.data
-        password = signup_form.password.data
+        usernamen = signup_form.username.data
+        passwordn = signup_form.password.data
 
-        user_doc = get_user(username)
-
-        if user_doc.to_dict() is None:
-            password_hash = generate_password_hash(password)
-            user_data = UserData(username, password_hash)
-            user_put(user_data)
-
+        if usernamen != username:
+            username = usernamen
+            password = passwordn
+            user_data = UserData(username, password)
             user = UserModel(user_data)
-
             login_user(user)
 
             flash('Bienvenido!')
@@ -74,7 +68,7 @@ def signup():
         else:
             flash('El usuario existe!')
 
-    return render_template('login.html', **context)
+    return render_template('login1.html', **context)
 
 
 @auth.route('logout')

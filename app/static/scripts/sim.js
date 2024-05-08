@@ -1,244 +1,222 @@
 import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
-
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
-// import { LinearToSRGB } from 'three/src/math/ColorManagement';
-
 
 const sliders = [
-    "#slider1", "#slider2", "#slider3", "#slider4", "#slider5", "#slider6"
-  ];
-  
-  const increaseButtons = [
-    "#increaseArm1", "#increaseArm2", "#increaseArm3", "#increaseArm4", "#increaseArm5", "#increaseArm6"
-  ];
-  
-  const decreaseButtons = [
-    "#decreaseArm1", "#decreaseArm2", "#decreaseArm3", "#decreaseArm4", "#decreaseArm5", "#decreaseArm6"
-  ];
-  
-  const valueElements = [
-    "#arm-n-1", "#arm-n-2", "#arm-n-3", "#arm-n-4", "#arm-n-5", "#arm-n-6",
-    "#wheel-n-1", "#wheel-n-2", "#arm-n-X", "#arm-n-Y", "#arm-n-Z", "#arm-n-R", "#arm-n-P", "#arm-n-Yaw"
-  ];
-  
-  
-  const directionButtons = [
-    "#forward", "#reverse", "#right", "#left"
-  ];
-  
-  const getInverseLabels = [
-    "#armI-n-X", "#armI-n-Y", "#armI-n-Z", "#armI-n-R", "#armI-n-P", "#armI-n-Yaw"
-  ];
-  
-  const getDirectLabels = [
-    "#armd-n-1", "#armd-n-2", "#armd-n-3", "#armd-n-4", "#armd-n-5", "#armd-n-6"
-  ];
-  
-  
-  
-  function pause(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms * 1000));
-  }
-  
-  function updateSliderValue(index) {
-      document.querySelector(valueElements[index]).textContent = document.querySelector(sliders[index]).value;
-      switch (sliders[index]) {
-          case sliders[0]:
-              setClaw_2Rotation(document.querySelector(sliders[index]).value);
-              break;
-          case sliders[1]:
-              setClaw_1Rotation(document.querySelector(sliders[index]).value);
-              break;
-          case sliders[2]:
-              setWristRotation(document.querySelector(sliders[index]).value);
-              break;
-          case sliders[3]:
-              setForeArmRotation(document.querySelector(sliders[index]).value);
-              break;
-          case sliders[4]:
-              setArmRotation(document.querySelector(sliders[index]).value);
-              break;
-          case sliders[5]:
-              setShoulderRotation(document.querySelector(sliders[index]).value); 
-              break;      
-          default:
-      }  
-  }
-  
-  function increase(index) {
-      document.querySelector(sliders[index]).value = parseInt(document.querySelector(sliders[index]).value) + 1;
-    updateSliderValue(index);
-  }
-  
-  function decrease(index) {
-      document.querySelector(sliders[index]).value -= 1;
-    updateSliderValue(index);
-  }
-  
-  
-  
-  sliders.forEach((slider, index) => {
-    const element = document.querySelector(slider);
-    const valueElement = document.querySelector(valueElements[index]);
-  
-    element.addEventListener("input", async (event) => {
-      valueElement.textContent = event.currentTarget.value
-      switch (sliders[index]) {
-          case sliders[0]:
-              setClaw_2Rotation(event.currentTarget.value);
-              break;
-          case sliders[1]:
-              setClaw_1Rotation(event.currentTarget.value);
-              break;
-          case sliders[2]:
-              setWristRotation(event.currentTarget.value);
-              break;
-          case sliders[3]:
-              setForeArmRotation(event.currentTarget.value);
-              break;
-          case sliders[4]:
-              setArmRotation(event.currentTarget.value);
-              break;
-          case sliders[5]:
-              setShoulderRotation(event.currentTarget.value); 
-              break;      
-          default:
-          
-        }
-      
-      // Aquí puedes continuar con el resto de tu lógica específica para el slider
-    });
-  });
-  
-  increaseButtons.forEach((button, index) => {
-    const element = document.querySelector(button);
-    element.addEventListener("click", () => increase(index));
-  });
-  
-  decreaseButtons.forEach((button, index) => {
-    const element = document.querySelector(button);
-    element.addEventListener("click", () => decrease(index));
-  });
-  
-  
-  const sendButton = document.querySelector("#sendButton")
-  const zeroButton = document.querySelector("#zeroButton")
-  const homeButton = document.querySelector("#homeButton")
-  const readyButton = document.querySelector("#readyButton")
-  
-  sendButton.addEventListener("click", enviarPos);
-  zeroButton.addEventListener("click", zeroPos);
-  homeButton.addEventListener("click", homePos);
-  readyButton.addEventListener("click", readyPos);
-  
-  
-  function enviarPos() {
-      const dxl7 = document.querySelector(valueElements[0]).textContent;
-      const dxl6 = document.querySelector(valueElements[1]).textContent;
-      const dxl5 = document.querySelector(valueElements[2]).textContent;
-      const dxl4 = document.querySelector(valueElements[3]).textContent;
-      const dxl3 = document.querySelector(valueElements[4]).textContent;
-      const dxl2 = document.querySelector(valueElements[5]).textContent;
-  
-      const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
-  
-      console.log(positionQ);
-  
-        enviarMensajeMQTT('/turtlebot/arm/claw/set/', dxl7);  
-        enviarMensajeMQTT('/turtlebot/arm/wrist/set/', dxl6);  
-        enviarMensajeMQTT('/turtlebot/arm/elbow/set/', dxl5);
-        enviarMensajeMQTT('/turtlebot/arm/elbow1/set/', dxl4);
-        enviarMensajeMQTT('/turtlebot/arm/shoulder/set/', dxl3);
-        enviarMensajeMQTT('/turtlebot/arm/base/set/', dxl2);
-  }
-  
-  function zeroPos() {
-      const dxl7 = 0
-      const dxl6 = 0
-      const dxl5 = 0
-      const dxl4 = 0
-      const dxl3 = 0
-      const dxl2 = 0
-  
-      const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
-      setClaw_2Rotation(dxl7);
-      setClaw_1Rotation(dxl6);
-      setWristRotation(dxl5);
-      setForeArmRotation(dxl4);
-      setArmRotation(dxl3);
-      setShoulderRotation(dxl2);
-  
-      console.log(positionQ);
-  
-      enviarMensajeMQTT('/turtlebot/arm/claw/set/', dxl7);  
-      enviarMensajeMQTT('/turtlebot/arm/wrist/set/', dxl6);  
-      enviarMensajeMQTT('/turtlebot/arm/elbow/set/', dxl5);
-      enviarMensajeMQTT('/turtlebot/arm/elbow1/set/', dxl4);
-      enviarMensajeMQTT('/turtlebot/arm/shoulder/set/', dxl3);
-      enviarMensajeMQTT('/turtlebot/arm/base/set/', dxl2);
-  }
-  
-  function homePos() {
-      const dxl7 = 88
-      const dxl6 = 0
-      const dxl5 = 81
-      const dxl4 = 142
-      const dxl3 = -123
-      const dxl2 = -3
-  
-      const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
-  
-      setClaw_2Rotation(dxl7);
-      setClaw_1Rotation(dxl6);
-      setWristRotation(dxl5);
-      setForeArmRotation(dxl4);
-      setArmRotation(dxl3);
-      setShoulderRotation(dxl2);
-  
-      console.log(positionQ);
-  
-      enviarMensajeMQTT('/turtlebot/arm/claw/set/', dxl7);  
-      enviarMensajeMQTT('/turtlebot/arm/wrist/set/', dxl6);  
-      enviarMensajeMQTT('/turtlebot/arm/elbow/set/', dxl5);
-      enviarMensajeMQTT('/turtlebot/arm/elbow1/set/', dxl4);
-      enviarMensajeMQTT('/turtlebot/arm/shoulder/set/', dxl3);
-      enviarMensajeMQTT('/turtlebot/arm/base/set/', dxl2);
-  }
-  
-  function readyPos() {
-      const dxl7 = 28
-      const dxl6 = -91
-      const dxl5 = 57
-      const dxl4 = 83
-      const dxl3 = 39
-      const dxl2 = 7
-  
-      const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
-  
-      setClaw_2Rotation(dxl7);
-      setClaw_1Rotation(dxl6);
-      setWristRotation(dxl5);
-      setForeArmRotation(dxl4);
-      setArmRotation(dxl3);
-      setShoulderRotation(dxl2);
-  
-      console.log(positionQ);
-  
-      enviarMensajeMQTT('/turtlebot/arm/claw/set/', dxl7);  
-      enviarMensajeMQTT('/turtlebot/arm/wrist/set/', dxl6);  
-      enviarMensajeMQTT('/turtlebot/arm/elbow/set/', dxl5);
-      enviarMensajeMQTT('/turtlebot/arm/elbow1/set/', dxl4);
-      enviarMensajeMQTT('/turtlebot/arm/shoulder/set/', dxl3);
-      enviarMensajeMQTT('/turtlebot/arm/base/set/', dxl2);
-  }
+  "#slider1", "#slider2", "#slider3", "#slider4", "#slider5", "#slider6"
+];
 
-function enviarMensajeMQTT(topic, msg) {
+const increaseButtons = [
+  "#increaseArm1", "#increaseArm2", "#increaseArm3", "#increaseArm4", "#increaseArm5", "#increaseArm6"
+];
+
+const decreaseButtons = [
+  "#decreaseArm1", "#decreaseArm2", "#decreaseArm3", "#decreaseArm4", "#decreaseArm5", "#decreaseArm6"
+];
+
+const valueElements = [
+  "#arm-n-1", "#arm-n-2", "#arm-n-3", "#arm-n-4", "#arm-n-5", "#arm-n-6",
+  "#wheel-n-1", "#wheel-n-2", "#arm-n-X", "#arm-n-Y", "#arm-n-Z", "#arm-n-R", "#arm-n-P", "#arm-n-Yaw"
+];
+
+
+const directionButtons = [
+  "#forward", "#reverse", "#right", "#left"
+];
+
+const getInverseLabels = [
+  "#armI-n-X", "#armI-n-Y", "#armI-n-Z", "#armI-n-R", "#armI-n-P", "#armI-n-Yaw"
+];
+
+const getDirectLabels = [
+  "#armd-n-1", "#armd-n-2", "#armd-n-3", "#armd-n-4", "#armd-n-5", "#armd-n-6"
+];
+
+
+
+function pause(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms * 1000));
+}
+
+function updateSliderValue(index) {
+    document.querySelector(valueElements[index]).textContent = document.querySelector(sliders[index]).value;
+    switch (sliders[index]) {
+        case sliders[0]:
+            setClaw_2Rotation(document.querySelector(sliders[index]).value);
+            break;
+        case sliders[1]:
+            setClaw_1Rotation(document.querySelector(sliders[index]).value);
+            break;
+        case sliders[2]:
+            setWristRotation(document.querySelector(sliders[index]).value);
+            break;
+        case sliders[3]:
+            setForeArmRotation(document.querySelector(sliders[index]).value);
+            break;
+        case sliders[4]:
+            setArmRotation(document.querySelector(sliders[index]).value);
+            break;
+        case sliders[5]:
+            setShoulderRotation(document.querySelector(sliders[index]).value); 
+            break;      
+        default:
+    }  
+}
+
+function increase(index) {
+    document.querySelector(sliders[index]).value = parseInt(document.querySelector(sliders[index]).value) + 1;
+  updateSliderValue(index);
+}
+
+function decrease(index) {
+    document.querySelector(sliders[index]).value -= 1;
+  updateSliderValue(index);
+}
+
+
+
+sliders.forEach((slider, index) => {
+  const element = document.querySelector(slider);
+  const valueElement = document.querySelector(valueElements[index]);
+
+  element.addEventListener("input", async (event) => {
+    valueElement.textContent = event.currentTarget.value
+    switch (sliders[index]) {
+        case sliders[0]:
+            setClaw_2Rotation(event.currentTarget.value);
+            break;
+        case sliders[1]:
+            setClaw_1Rotation(event.currentTarget.value);
+            break;
+        case sliders[2]:
+            setWristRotation(event.currentTarget.value);
+            break;
+        case sliders[3]:
+            setForeArmRotation(event.currentTarget.value);
+            break;
+        case sliders[4]:
+            setArmRotation(event.currentTarget.value);
+            break;
+        case sliders[5]:
+            setShoulderRotation(event.currentTarget.value); 
+            break;      
+        default:
+        
+      }
+    
+    // Aquí puedes continuar con el resto de tu lógica específica para el slider
+  });
+});
+
+increaseButtons.forEach((button, index) => {
+  const element = document.querySelector(button);
+  element.addEventListener("click", () => increase(index));
+});
+
+decreaseButtons.forEach((button, index) => {
+  const element = document.querySelector(button);
+  element.addEventListener("click", () => decrease(index));
+});
+
+
+const sendButton = document.querySelector("#sendButton")
+const zeroButton = document.querySelector("#zeroButton")
+const homeButton = document.querySelector("#homeButton")
+const readyButton = document.querySelector("#readyButton")
+
+sendButton.addEventListener("click", enviarPos);
+zeroButton.addEventListener("click", zeroPos);
+homeButton.addEventListener("click", homePos);
+readyButton.addEventListener("click", readyPos);
+
+
+function enviarPos() {
+    const dxl7 = document.querySelector(valueElements[0]).textContent;
+    const dxl6 = document.querySelector(valueElements[1]).textContent;
+    const dxl5 = document.querySelector(valueElements[2]).textContent;
+    const dxl4 = document.querySelector(valueElements[3]).textContent;
+    const dxl3 = document.querySelector(valueElements[4]).textContent;
+    const dxl2 = document.querySelector(valueElements[5]).textContent;
+
+    const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
+
+    console.log(positionQ);
+
+    enviarDatos(positionQ);
+}
+
+function zeroPos() {
+    const dxl7 = 0
+    const dxl6 = 0
+    const dxl5 = 0
+    const dxl4 = 0
+    const dxl3 = 0
+    const dxl2 = 0
+
+    const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
+    setClaw_2Rotation(dxl7);
+    setClaw_1Rotation(dxl6);
+    setWristRotation(dxl5);
+    setForeArmRotation(dxl4);
+    setArmRotation(dxl3);
+    setShoulderRotation(dxl2);
+
+    console.log(positionQ);
+
+    enviarDatos(positionQ);
+}
+
+function homePos() {
+    const dxl7 = 88
+    const dxl6 = 0
+    const dxl5 = 81
+    const dxl4 = 142
+    const dxl3 = -123
+    const dxl2 = -3
+
+    const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
+
+    setClaw_2Rotation(dxl7);
+    setClaw_1Rotation(dxl6);
+    setWristRotation(dxl5);
+    setForeArmRotation(dxl4);
+    setArmRotation(dxl3);
+    setShoulderRotation(dxl2);
+
+    console.log(positionQ);
+
+    enviarDatos(positionQ);
+}
+
+function readyPos() {
+    const dxl7 = 28
+    const dxl6 = -91
+    const dxl5 = 57
+    const dxl4 = 83
+    const dxl3 = 39
+    const dxl2 = 7
+
+    const positionQ = dxl2+" "+dxl3+" "+dxl4+" "+dxl5+" "+dxl6+" "+dxl7;
+
+    setClaw_2Rotation(dxl7);
+    setClaw_1Rotation(dxl6);
+    setWristRotation(dxl5);
+    setForeArmRotation(dxl4);
+    setArmRotation(dxl3);
+    setShoulderRotation(dxl2);
+
+    console.log(positionQ);
+
+    enviarDatos(positionQ);
+}
+
+
+
+function enviarDatos(data) {
     var data = {
-        'topic': topic,
-        'msg': msg
+        'data': data,
     };
 
     // Envía el mensaje al servidor Flask en tiempo real usando una solicitud HTTP POST
@@ -323,7 +301,7 @@ function setArmRotation(r) {
  * @param  {number} r X axis rotation value of the ForeArm (0 - 100)
  */
 function setForeArmRotation(r) {
-    var value = map(r, -149, 149, -2.4, 2.4)
+    var value = map(r, -149, 138, -2.4, 2.4)
     console.log("ForeArm X:", value);
     ForeArm.rotation.x = value;
 }

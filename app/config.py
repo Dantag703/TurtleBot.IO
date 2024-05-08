@@ -1,7 +1,7 @@
 class Config():
     ENV = 'development'
     SECRET_KEY = 'SUPER SECRETO'
-    MQTT_BROKER_URL = 't6b406cc.ala.dedicated.aws.emqxcloud.com'
+    MQTT_BROKER_URL = 'ze5a0a21.emqx.cloud'
     MQTT_BROKER_PORT = 1883
     MQTT_USERNAME = 'mqttpy'  # Set this item when you need to verify username and password
     MQTT_PASSWORD = 'public'  # Set this item when you need to verify username and password
